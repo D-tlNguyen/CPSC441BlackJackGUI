@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <title>title</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Fira+Code&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Mono&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon">
   <style>
-    h1, p {
-        font-family: 'Fira Code', monospace;
+    h1, p, li, h5, span {
+        font-family: 'Fira Mono', monospace;
+        white-space: pre;
+    }
+    .col-6 {
+      padding: 0px;
+    }
+
+    li, p, span {
+      font-size: 14px;
     }
   </style>
   </head>
@@ -22,17 +30,14 @@
       </div><!-- header row-->
       <hr>
       <div class="row">
-        <div class="col-6">
-          <p>
-            <span id="game">
-            </span> 
-          </p>
+        <div class="col-8">
+          <span id="game">
+          </span> 
         </div><!-- left col-->
-        <div class="col-6">
-            <p>
-              <span id="chatbox">
-              </span>
-            </p>
+        <div class="col-4">
+            <h5>Chat</h5>
+            <ul id="chatbox">
+            </ul>
         </div><!-- right col -->
       </div><!-- body row-->
     </div><!-- containeer-->
@@ -51,9 +56,12 @@
 
             socket.on('broadcast', data => {
                 strData = decoder.decode(data)
+                console.log(strData)
                 if(strData.substr(0,7)==="<<TXT>>")
-                  $('#chatbox').html(strData.substr(7))
-                else $('#game').html(strData)
+                  $('#chatbox').append(`<li>${strData.substr(7)}</li>`)
+                else {
+                  $('#game').html(strData.split(';').join('\n').trim())
+                }
             })
         })
     </script>
