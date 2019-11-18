@@ -9,7 +9,7 @@
     <script defer src="/__/firebase/7.4.0/firebase-app.js"></script>
     <!-- include only the Firebase features as you need -->
     <script defer src="/__/firebase/7.4.0/firebase-auth.js"></script>
-    <script defer src="/__/firebase/7.4.0/firebase-database.js"></script>
+    <script defer src="/__/firebase/7.4.0/firebase-firestore.js"></script>
     <script defer src="/__/firebase/7.4.0/firebase-messaging.js"></script>
     <script defer src="/__/firebase/7.4.0/firebase-storage.js"></script>
     <!-- initialize the SDK after all desired features are loaded -->
@@ -74,24 +74,30 @@
 
         try {
           let app = firebase.app();
-          let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
         } catch (e) {
           console.error(e);
         }
 
         $(document).ready(() => {
-            const socket = io()
-            const decoder = new TextDecoder()
+          const db = firebase.firestore()
+          const decoder = new TextDecoder()
 
-            socket.on('broadcast', data => {
-                strData = decoder.decode(data)
-                console.log(strData)
-                if(strData.substr(0,7)==="<<TXT>>")
-                  $('#chatbox').append(`<li>${strData.substr(7)}</li>`)
-                else {
-                  $('#game').html(strData.split(';').join('\n').trim())
-                }
-            })
+          db.collection('GUI').doc('GUI').onSnapshot(res => {
+            const data = res.data().data
+            try {
+              strData = decoder.decode(data)
+            } catch(e) {
+              strData = data
+            } finally {
+              console.log(strData)
+              if(strData.substr(0,7)==="<<TXT>>")
+                $('#chatbox').append(`<li>${strData.substr(7)}</li>`)
+              else {
+                $('#game').html(strData.split(';').join('\n').trim())
+              }
+
+            }
+          })
         })
       });
     </script>
