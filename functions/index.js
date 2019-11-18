@@ -24,8 +24,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/', function(req, res) {
-    console.log(req.body)
-    const data = req.query.data
+    const data = req.body.data
     switch(data) {
         case 'ok\n': break
 
