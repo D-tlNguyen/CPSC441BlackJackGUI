@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/7.4.0/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/7.4.0/firebase-auth.js"></script>
+    <script defer src="/__/firebase/7.4.0/firebase-database.js"></script>
+    <script defer src="/__/firebase/7.4.0/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/7.4.0/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Fira+Mono&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico" type="image/vnd.microsoft.icon">
+    <style>
+      h1, p, li, h5, span {
+          font-family: 'Fira Mono', monospace;
+          white-space: pre;
+      }
+      .col-6 {
+        padding: 0px;
+      }
+
+      li, p, span {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <br><br>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+            <h1 style="text-align: center">Black Jack</h1>
+        </div><!-- header col-->
+      </div><!-- header row-->
+      <hr>
+      <div class="row">
+        <div class="col-8">
+          <span id="game">
+          </span> 
+        </div><!-- left col-->
+        <div class="col-4">
+            <h5>Chat</h5>
+            <ul id="chatbox">
+            </ul>
+        </div><!-- right col -->
+      </div><!-- body row-->
+    </div><!-- containeer-->
+    
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+        // // The Firebase SDK is initialized and available here!
+        //
+        // firebase.auth().onAuthStateChanged(user => { });
+        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+        // firebase.messaging().requestPermission().then(() => { });
+        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+        //
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+        try {
+          let app = firebase.app();
+          let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
+          document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
+        } catch (e) {
+          console.error(e);
+          document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
+        }
+
+        $(document).ready(() => {
+            const socket = io()
+            const decoder = new TextDecoder()
+
+            socket.on('broadcast', data => {
+                strData = decoder.decode(data)
+                console.log(strData)
+                if(strData.substr(0,7)==="<<TXT>>")
+                  $('#chatbox').append(`<li>${strData.substr(7)}</li>`)
+                else {
+                  $('#game').html(strData.split(';').join('\n').trim())
+                }
+            })
+        })
+      });
+    </script>
+  </body>
+</html>
