@@ -51,7 +51,7 @@ app.post('/', function(req, res) {
         case 'ok\n': break
 
         default:
-            console.log('Received: ' + data)
+            //console.log('Received: ' + data)
             display(data)
     }
     res.send(data)
